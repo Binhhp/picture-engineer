@@ -1,0 +1,33 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+
+<div class="confirm-email">
+    @{
+        if (ViewData?.ModelState[""]?.Errors?.Any() == false)
+        {
+            <div asp-validation-summary="All"
+                 class="text-danger alert alert-danger" style="color: red !important; font-size: 20px">
+
+            </div>
+            <div class="text-center col-md-12">
+                <a href="@Url.Action(action: "Login", controller: "AccountLogin", null, Context.Request.Scheme)"
+                   class="btn" style="background: rgb(245 182 62); color: white; ">Đăng nhập</a>
+            </div>
+        }
+        else
+        {
+            <h3 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>Xác nhận email ?</h3>
+            <div class="form-group text-center">
+                <p style="font-size:15px; margin: 20px 0; word-spacing:2px; font-size: 17px; color: green">Xác nhận email thành công!</p>
+            </div>
+
+            <div class="text-center col-md-12">
+                <a href="@Url.Action(action: "Login", controller: "AccountLogin", null, Context.Request.Scheme)"
+                   class="btn" style="background: rgb(245 182 62); color: white; ">Đăng nhập</a>
+            </div>
+        }
+    }
+</div>

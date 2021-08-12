@@ -1,0 +1,415 @@
+﻿@{
+    ViewData["Title"] = "Picture Engineer - Bài viết";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-bookmark"></i> Bài viết</h1>
+        <p>Thực hiện quản lý bài viết</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-bookmark fa-lg"></i>&nbsp;Bài viết</li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="text-right">
+                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-add" id="modal__btn-add"><i class="fa fa-plus"></i>Thêm mới</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="myTable" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th width="20%">Ảnh</th>
+                            <th width="15%">Tiêu đề</th>
+                            <th width="15%">Dịch vụ</th>
+                            <th width="15%">Ngày tạo</th>
+                            <th width="20%">Xử lý</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@{ await Html.RenderPartialAsync("Add.cshtml"); }
+@{ await Html.RenderPartialAsync("Edit.cshtml"); }
+
+@section scripts{
+    <script type="text/javascript">
+
+
+        $(".index").removeClass("active");
+        $(".blog").addClass("active");
+
+        JTables();
+
+        async function JTables() {
+
+            await $("#myTable").DataTable({
+                paging: true,
+                searching: true,
+                pageLength: 10,
+                processing: true,
+                serverSide: false,
+                "bSort": false,
+                "responsive": true,
+                ajax: {
+                    url: "/admin/blogs/all",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "ImagePath", name: "imagePath", 'className': 'text-center', orderable: false,
+                        render: function (data) {
+                            return '<img src=' + data + ' `width="120"` height="80"/>';
+                        }
+                    },
+                    { data: "Title", name: "Title", 'className': 'text-center', orderable: false },
+                    {
+                        data: "ServiceId", name: "ServiceId", 'className': 'text-center', orderable: false, render: function (data) {
+                            if (data === 1) {
+                                return "Nhận diện ảnh chụp tài liệu";
+                            }
+                            if (data === 2) {
+                                return "Tách pdf";
+                            }
+                            if (data === 3) {
+                                return "Chuyển đổi pdf sang docx";
+                            }
+                            if (data === 4) {
+                                return "Chuyển đổi docx sang pdf";
+                            }
+                        }
+
+                    },
+                    {
+                        data: "DateCreated", name: "date-created", 'className': 'text-center', orderable: false,
+                        render: function (data) {
+                            const date = new Date(data);
+
+                            return "Time: <strong>" + date.getUTCHours() + "h " + date.getMinutes() + "p</strong><br />Date: <strong>" + date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + "</strong>";
+                        }
+                    },
+                    {
+                        data: null,
+                        className: "text-center",
+                        render: function (data, type, row) {
+
+
+                            var button =
+                                '<a href="javascript:void(0);" data-toggle="modal" data-target="#modal-edit" onclick="Edit(this);" data-title="' + data.Title + '" data-key="' + data.Id + '" data-content="' + data.Contents + '" data-description="' + data.Description + '" data-meta="' + data.MetaTitle + '" data-service="' + data.ServiceId + '" class="btn btn-outline-info btn-sm"  title="Sửa"><i class="fa fa-edit"></i>Sủa file</a></td>&nbsp;';
+
+                            button +=
+                                '<a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="Delete(this)" data-key="' + data.Id + '" title="Xóa"><i class="fa fa-trash"></i>Xóa file</a></td>';
+                            return button;
+                        },
+                    }
+                ],
+                "columnDefs": [{
+                    "searchable": false,
+                    "visible": false,
+                    "checkboxes": {
+                        'selectRow': true
+                    }
+                }],
+                "select": {
+                    'style': 'multi'
+                },
+            });
+        };
+
+        //Reload tables
+        async function reloadTables() {
+            await $("#myTable").DataTable().ajax.reload();
+        };
+        var editor;
+        ClassicEditor
+            .create(document.querySelector('#form-add input[name="content"]'))
+            .then(newEditor => {
+                editor = newEditor
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        var editorEdit;
+        ClassicEditor
+            .create(document.querySelector('#form-edit input[name="content"]'))
+            .then(newEditor => {
+                editorEdit = newEditor
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        //Add
+        var validator = $("#form-add").validate({
+            rules: {
+                meta: "required",
+                title: "required",
+                description: "required",
+                content: "required",
+                file: {
+                    required: true,
+                    extension: "jpg|jpeg|png"
+                }
+            },
+            messages: {
+                meta: {
+                    required: "Bạn cần nhập meta"
+                },
+                title: {
+                    required: "Bạn cần nhập tiêu đề"
+                },
+                description: {
+                    required: "Bạn cần nhập mô tả"
+                },
+                content: {
+                    required: "Bạn cần nhập nội dung"
+                },
+                file: {
+                    required: "Bạn cần chọn file ảnh",
+                    extension: "Định dạng ảnh không đúng"
+                }
+            },
+            errorElement: 'span',
+            errorClass: 'help-block text-danger',
+            validClass: "success",
+            highlight: function (element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element) {
+                $(element).removeClass('is-invalid');
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                var data = $("#form-add").find(".form-control");
+                var formData = new FormData();
+
+                data.map(item => {
+                    var valueItem = $(data[item]).val();
+                    const key = $(data[item]).attr("data-key");
+
+                    if (key === "FileUpload") {
+                        const fileUpload = $(data[item]).get(0);
+                        valueItem = (fileUpload.files)[0];
+
+                    }
+
+                    if (key === 'MetaTitle') {
+                        valueItem = valueItem.toLowerCase();
+                    }
+
+                    if (key === 'Contents') {
+                        valueItem = editor.getData();
+                    }
+                    formData.append(key, valueItem);
+                })
+
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/blogs",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $("#btn-add").html("Loading...");
+                        $("#btn-add").addClass("disabled");
+                    },
+                    success: function () {
+                        toastr["success"]("Thêm mới thành công");
+                        $("#btn-add").html('<i class="fa fa-plus"></i>&nbsp;Thêm mới');
+                        $("#btn-add").removeClass("disabled");
+                        clearInput("form-add");
+                        reloadTables();
+                    },
+                    error: function (errors) {
+                        toastr["error"]("Error " + errors.responseText);
+                        $("#btn-add").html('<i class="fa fa-plus"></i>&nbsp;Thêm mới');
+                        $("#btn-add").removeClass("disabled");
+                    }
+                })
+            }
+        });
+
+        function clearInput(formKey) {
+            $("#" + formKey).find("input[class='form-control']").val("");
+            $("#" + formKey).find(".form-control").removeClass("is-invalid");
+            editor.setData("");
+        };
+
+        $("#modal__btn-add").click(function () {
+            clearInput("form-add");
+        });
+        ///Edit
+        function Edit(event) {
+            $("#form-add").find("input[class='form-control']").val("");
+
+            $("#form-edit").find(".form-control").removeClass("is-invalid");
+
+            var data = $(event).data();
+            $("input[data-keyboard='FileUpload']").val("");
+
+            for (var item in data) {
+                if (item === "target" || item === "toggle") continue;
+                if (item === "content") {
+                    editorEdit.setData(data[item]);
+                }
+                else {
+                    var input = $("#form-edit").find('*[name=' + item + ']');
+                    input.val(data[item]);
+                }
+            }
+        };
+
+        var validatorEdit = $("#form-edit").validate({
+            rules: {
+                meta: "required",
+                title: "required",
+                description: "required",
+                content: "required",
+                file: {
+                    required: false,
+                    extension: "jpg|jpeg|png"
+                }
+            },
+            messages: {
+                meta: {
+                    required: "Bạn cần nhập meta"
+                },
+                title: {
+                    required: "Bạn cần nhập tiêu đề"
+                },
+                description: {
+                    required: "Bạn cần nhập mô tả"
+                },
+                content: {
+                    required: "Bạn cần nhập nội dung"
+                },
+                file: {
+                    extension: "Định dạng ảnh không đúng"
+                }
+            },
+            errorElement: 'span',
+            errorClass: 'help-block text-danger',
+            validClass: "success",
+            highlight: function (element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element) {
+                $(element).removeClass('is-invalid');
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                var data = $("#form-edit").find(".form-control");
+                var formData = new FormData();
+                var k = 0;
+
+                data.map(item => {
+                    var valueItem = $(data[item]).val();
+
+                    const key = $(data[item]).attr("data-keyboard");
+
+                    if (key === "FileUpload") {
+                        const fileUpload = $(data[item]).get(0);
+                        valueItem = (fileUpload.files)[0];
+
+                    }
+
+                    if (key === 'MetaTitle') {
+                        valueItem = valueItem.toLowerCase();
+                    }
+
+                    if (key === 'Key') {
+                        k = $(data[item]).val();
+                    }
+
+                    if (key === "Contents") {
+                        valueItem = editorEdit.getData();
+                    }
+
+                    formData.append(key, valueItem);
+                })
+
+                $.ajax({
+                    type: "PUT",
+                    url: "/admin/blogs/" + k,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $("#btn-edit").html("Loading...");
+                        $("#btn-edit").addClass("disabled");
+                    },
+                    success: function () {
+                        toastr["success"]("Cập nhật thành công");
+                        $("#modal-edit").modal("toggle");
+                        $("#btn-edit").html('<i class="fa fa-plus"></i>&nbsp;Cập nhật');
+                        $("#btn-edit").removeClass("disabled");
+                        clearInput("form-edit");
+
+                        reloadTables();
+                    },
+                    error: function (errors) {
+                        toastr["error"]("Error " + errors.responseText);
+                        $("#btn-edit").html('<i class="fa fa-plus"></i>&nbsp;Cập nhật');
+                        $("#btn-edit").removeClass("disabled");
+                    }
+                })
+            }
+        });
+        ///Delete
+
+        function Delete(event) {
+            swal({
+                title: "Bạn có muốn xóa bản ghi này?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Có, xóa nó!",
+                cancelButtonText: "Không, không cần đâu!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, (isConfirm) => {
+                if (isConfirm) {
+                    halderDelete();
+                }
+            });
+
+            const halderDelete = async () => {
+                var key = $(event).attr('data-key');
+
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/admin/blogs/' + key,
+                    contentType: false,
+                    processData: false,
+                    success: function () {
+                        toastr["success"]("Xóa thành công");
+                        swal.close();
+                        reloadTables();
+                    },
+                    error: function (errors) {
+                        swal("Oh no!", "Error " + errors.status + " " + errors.responseText, "error");
+                    }
+                })
+            }
+        }
+    </script>
+}

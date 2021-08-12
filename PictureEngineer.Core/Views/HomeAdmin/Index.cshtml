@@ -1,0 +1,137 @@
+﻿@inject PictureEngineer.Data.PictureEngineerDbContext context;
+@{
+    ViewData["Title"] = "Picture Engineer - Trang chủ";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-home"></i> Trang chủ</h1>
+        <p></p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i>&nbsp;Trang chủ</li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small primary coloured-icon">
+            <i class="icon fa fa-users fa-3x"></i>
+            <div class="info">
+                <h4>Tài khoản</h4>
+                <p><b>@context.User.Count()</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small info coloured-icon">
+            <i class="icon fa fa-bookmark-o fa-3x"></i>
+            <div class="info">
+                <h4>Số lượng files upload</h4>
+                <p><b>@context.Files.Count()</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small warning coloured-icon">
+            <i class="icon fa fa-files-o fa-3x"></i>
+            <div class="info">
+                <h4>Bài viết</h4>
+                <p><b>@context.Blogs.Count()</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small danger coloured-icon">
+            <i class="icon fa fa-table fa-3x"></i>
+            <div class="info">
+                <h4>Dịch vụ</h4>
+                <p><b>@context.Services.Count()</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="tile">
+            <h3 class="tile-title">Số lượng files upload theo tuần</h3>
+            <div class="embed-responsive embed-responsive-16by9">
+                <canvas class="embed-responsive-item" id="lineChartDemo"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="tile">
+            <h3 class="tile-title">Thống kê số files đã upload và số bài viết</h3>
+            <div class="embed-responsive embed-responsive-16by9">
+                <canvas class="embed-responsive-item" id="pieChartDemo"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+
+    function getTotalFilesByDayOfWeek() {
+         $.get('/admin/GetFile').then(response => {
+            if (response.success == true) {
+                var result = response.data;
+                var labels = [];
+                var arrBar = [];
+
+                result.map(function (item) {
+                    labels.push(item.Day);
+                    arrBar.push(item.Quantity);
+                    //var p = {
+                    //    value: valueBar["pine"],
+                    //    color: valueBar["color"],
+                    //    highlight: "#FF5A5E",
+                    //    label: valueBar["month"]
+                    //}
+
+                });
+
+                var data = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Số lượng file upload theo tuần",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(151,187,205,1)",
+                            data: arrBar
+                        },
+                    ]
+                };
+
+                var pdata = [
+                    {
+                        value: "@context.Files.Count()",
+                        color: "#46BFBD",
+                        highlight: "#5AD3D1",
+                        label: "Files"
+                    },
+                    {
+                        value: "@context.Blogs.Count()",
+                        color: "#F7464A",
+                        highlight: "#FF5A5E",
+                        label: "Bài viết"
+                    },
+                ];
+
+                var ctxl = $("#lineChartDemo").get(0).getContext("2d");
+                var lineChart = new Chart(ctxl).Bar(data);
+
+                var ctxl = $("#pieChartDemo").get(0).getContext("2d");
+                var lineChart = new Chart(ctxl).Pie(pdata);
+            }
+        })
+    };
+    getTotalFilesByDayOfWeek();
+    </script>
+}

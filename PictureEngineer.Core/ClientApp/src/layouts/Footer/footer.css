@@ -1,0 +1,56 @@
+.picture-engineer__footer{
+    margin-top: 30px;
+}
+
+.picture-engineer__footer .container{
+    text-align: center;
+    padding-top: 40px;
+}
+.logo__footer{
+    font-family: 'Fredoka One', cursive;
+    font-size: 23px;
+    color: #4a4c4e;
+}
+.picture-engineer__footer{
+    left: 0;
+    bottom: 0;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+}
+.picture-engineer__footer .contact{
+    justify-content: center;
+    padding-left: 7px;
+    padding-top: 30px;
+}
+.picture-engineer__footer .contact a{
+    font-size: 20px;
+    border-radius: 30%;
+    border: 1px solid rgb(231, 223, 223);
+    color: rgb(73, 72, 72);
+    padding: 10px 15px 10px 15px;
+    margin-right: 15px;
+    margin-bottom: 30px;
+}
+.picture-engineer__footer .contact a:hover{
+    text-decoration: none;
+    background-color: #f8f7f7;
+    
+}
+.picture-engineer__menus .contaniner-item{
+    text-align: center;
+    display: block;
+    background-color: #f2f2f2;
+    padding: 10px 0 10px 0;
+}
+.picture-engineer__menus .contaniner-item a{
+    margin-right: 20px;
+    font-size: 17px;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(34, 33, 33);
+}
+.picture-engineer__footer footer{
+    text-align: center;
+    padding: 20px 0 20px 0;
+}

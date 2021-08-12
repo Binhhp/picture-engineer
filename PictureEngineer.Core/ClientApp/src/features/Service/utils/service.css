@@ -1,0 +1,153 @@
+
+.picture-engineer__upload{
+    border-radius: 25px;
+    margin: 0 70px;
+    padding: 10px;
+}
+@media screen and (max-width: 768px){
+    .picture-engineer__upload{
+        margin: 0;
+    }
+}
+.picture-engineer__upload .uploader{
+    border-radius: 18px;
+    padding: 20px 15px 23px;
+    background: rgba(17, 48, 78, 0.18);
+    border: none;
+}
+/* usage */
+.picture-engineer__usage{
+    background-color: rgb(249, 249, 251);
+    padding: 100px 0;
+}
+.picture-engineer__usage .container{
+    padding: 0 var(--margin);
+}
+.picture-engineer__usage h2{
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.16;
+    text-align: left;
+    color: rgb(17, 48, 78);
+    margin: 0px 0px 40px;
+}
+.picture-engineer__usage ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.picture-engineer__usage p{
+    font-weight: 500;
+}
+
+.picture-engineer__usage ul .answer{
+    padding-bottom: 20px;
+}
+.picture-engineer__usage ul li{
+    padding-bottom: 10px;
+    font-weight: 500;
+    font-size: 18px;
+}
+.picture-engineer__usage ul li i{
+    color: rgb(42, 177, 16);
+    font-size: 20px;
+}
+
+.note{
+    margin: 0 70px;
+    padding: 20px 15px 23px;
+}
+.note-des{
+    color: #67696b;
+    font-family: Montserrat,Arial;
+    font-size: 16px;
+    font-weight: 450;
+}
+.note-button{
+    color: black;
+    cursor: pointer;
+}
+.note-content{
+    color: #454749;
+    font-size: 15.5px;
+}
+.note-content span{
+    font-weight: 450;
+    font-size: 18px;
+}
+.name-File{
+    margin-top: 15px;
+}
+
+.upload-file span{
+    color: #FFFFFF !important;
+}
+.dropzone i{
+    font-size: 60px;
+}
+
+/* -----process files -----*/
+.picture-engineer__process{
+    height: max-content;
+    border-radius: 16px;
+    margin: 0 90px;
+}
+.processing__main{
+    width: 100%;
+}
+.upload__view{
+    background-color: rgb(243, 252, 254);
+    text-align: center;
+    padding: 40px 0;
+    display: block;   
+    border-top-right-radius: 16px;
+    border-top-left-radius: 16px;
+}
+.py-40{
+    padding: 40px 0 15px 0;
+} 
+.name-File{
+    font-size: 15px;
+    font-weight: bold;
+}
+.size-File{
+    font-size: 13.5px;
+    color: rgb(134, 133, 133);
+}
+.mar_G{
+    margin-right: 40px;
+}
+.process-File{
+    color: #454749;
+    font-size: 16px;
+    font-family: Montserrat,Arial;
+    text-align: right;
+    padding: 0 30px;
+    margin: 30px 0;
+    height: max-content;
+}
+.process-File span{
+    cursor: pointer;
+    margin-right: 10px;
+    padding: 6px 20px;
+    border: 1px solid #67696b;
+    border-radius: 45px;
+}
+
+.process-File .btn-process{
+    color: #FFFFFF !important;
+}
+
+.modal-excent{
+    text-align: center;
+    justify-content: center;
+}
+.modal-excent img{
+    width: 100%;
+}
+.modal-header .close{
+    background-color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    font-size: 27px;
+    height: max-content;
+}

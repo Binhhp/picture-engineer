@@ -1,0 +1,68 @@
+
+.picture-engineer__main{
+    padding-top: 120px;
+}
+.banner_engineer{
+    background: url('../../../assets/images/picture-engineer.png');
+    background-repeat: no-repeat;
+    background-position: 8% 0%;
+    background-size: auto;
+}
+.hero{
+    height: 273px;
+    padding:5% 4% 5.3% 27%;
+}
+.picture-engineer__banner{
+    max-width: 100%;
+    width: 100%;
+    height: min-content;
+    padding: 0;
+    margin: 0;
+}
+.picture-engineer__banner .container{
+    height: min-content;
+}
+.picture-engineer__banner h1{
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 1.33;
+    color: #11304e;
+    margin: 0;
+    padding-bottom: 5px;
+    width: 100%;
+}
+.picture-engineer__banner h2{
+    font-size: 20px;
+    font-weight: 500;
+    opacity: 0.6;
+    color: #11304e;
+    margin-bottom: 0;
+}
+@media screen and  (max-width: 1250px){
+    .picture-engineer__banner .banner_engineer{
+        background-position: 4%;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 1054px){
+    .picture-engineer__banner .hero{
+        padding-top: 10%;
+        padding-left: 30%;
+    }
+    .picture-engineer__banner h1{
+        font-size: 50px;
+        margin-left: 0;
+    }
+}
+@media screen and (max-width: 768px){
+    .banner_engineer{
+        background-image: none;
+    }
+    .hero{
+        height: 100%;
+        padding: 20px;
+    }
+    .picture-engineer__banner h1{
+        font-size: 28px;
+        margin-left: 0;
+    }
+}

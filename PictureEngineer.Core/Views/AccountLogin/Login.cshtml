@@ -1,0 +1,133 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+<div class="login-box">
+    <form id="form-login">
+        <div class="login-form" onsubmit="return false">
+            <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>Đăng nhập</h3>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input class="form-control" name="email" data-key="Email" placeholder="Email" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Mật khẩu</label>
+                <input class="form-control" name="password" data-key="Password" type="password" placeholder="Mật khẩu" />
+            </div>
+            <div class="form-group">
+                <div class="utility">
+                    <div class="animated-checkbox"></div>
+                    <p class="semibold-text mb-2">
+                        <a href="#" data-toggle="flip">Quên mật khẩu?</a>
+                    </p>
+                </div>
+            </div>
+            <input data-key="ReturnUrl" type="text" value="@ViewData["ReturnUrl"]" style="display: none" />
+            <div class="form-group btn-container">
+                <button class="btn btn-primary btn-block" type="submit" id="btn-login"><i class="fa fa-sign-in fa-lg fa-fw"></i>Đăng nhập</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Form quên mật khẩu-->
+    <div class="forget-form">
+        <form id="form-reset" onsubmit="return false">
+            <h3 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>Quên mật khẩu</h3>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input class="form-control"
+                       type="text" name="email" placeholder="Email" />
+            </div>
+            <div class="form-group btn-container">
+                <button id="btn-reset" class="btn btn-primary btn-block" type="submit">
+                    <i class="fa fa-unlock fa-lg fa-fw"></i>Cài lại
+                </button>
+            </div>
+        </form>
+        <div class="form-group mt-3">
+            <p class="semibold-text mb-0"><a href="#" data-toggle="flip"><i class="fa fa-angle-left fa-fw"></i> Quay lại</a></p>
+        </div>
+    </div>
+</div>
+@section login{
+    <script type="text/javascript">
+
+        $('.login-content [data-toggle="flip"]').click(function () {
+            $('.login-box').toggleClass('flipped');
+            return false;
+        });
+        //Login
+        var formLogin = $("#form-login").validate({
+            rules: {
+                ...rules
+            },
+            messages: { ...messages },
+            ...options,
+            submitHandler: function (form) {
+                var data = $("#form-login").find(".form-control");
+                var formData = new FormData();
+
+                data.map(item => {
+                    var valueItem = $(data[item]).val();
+                    const key = $(data[item]).attr("data-key");
+
+                    if (key === 'Key') {
+                        valueItem = valueItem.toLowerCase();
+                    }
+
+                    formData.append(key, valueItem);
+                })
+
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/login",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $("#btn-login").html("Loading...");
+                        $("#btn-login").addClass("disabled");
+                    },
+                    success: function (url) {
+                        window.location.href = url;
+                    },
+                    error: function (errors) {
+                        toastr["error"](errors.responseText);
+                        $("#btn-login").html('<i class="fa fa-sign-in fa-lg fa-fw"></i>Đăng nhập');
+                        $("#btn-login").removeClass("disabled");
+                    }
+                })
+            }
+        });
+        //Add
+        var formResetPassword = $("#form-reset").validate({
+            rules: {
+                ...rules
+            },
+            messages: { ...messages },
+            ...options,
+            submitHandler: function (form) {
+                var email = $("#form-reset").find(".form-control");
+
+                $.ajax({
+                    type: "GET",
+                    url: "/admin/password?email=" + email.val(),
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $("#btn-reset").html("Loading...");
+                        $("#btn-reset").addClass("disabled");
+                    },
+                    success: function (url) {
+                        window.location.href = url;
+                    },
+                    error: function (errors) {
+                        toastr["error"](errors.responseText);
+                        $("#btn-reset").html('<i class="fa fa-unlock fa-lg fa-fw"></i>Cài lại');
+                        $("#btn-reset").removeClass("disabled");
+                    }
+                })
+            }
+        });
+    </script>
+}

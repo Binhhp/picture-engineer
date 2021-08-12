@@ -1,0 +1,14 @@
+.container{
+    width: 100%;
+    height: 100%;
+}
+.body-err{
+    margin: 0px 300px 0px 300px;
+}
+.text-err{
+    text-align: center;
+    margin-top: 20%;
+    font-size: 50px;
+    font-weight: bold;
+    color: gray;
+}

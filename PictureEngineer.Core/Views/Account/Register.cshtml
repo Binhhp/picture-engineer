@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Identity
+<div class="modal fade" id="modal-add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="width:100%; margin: 0 auto;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Tạo tài khoản
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form-group" id="form-account">
+                <div class="modal-body">
+                    <div class="col-md-12 d-flex form-group">
+                        <div class="col-md-6">
+                            <label>Tài khoản</label>
+                            <input class="form-control" name="username" data-key="UserName" placeholder="Tài khoản" />
+                        </div>
+                        <div class="col-md-6">
+                            <label>Email</label>
+                            <input class="form-control" name="email" data-key="Email" placeholder="Email" />
+                        </div>
+                    </div>
+                    <div class="col-md-12 d-flex form-group">
+                        <div class="col-md-6">
+                            <label>Mật khẩu</label>
+                            <input class="form-control" id="password" name="password" data-key="Password" placeholder="Mật khẩu" type="password" />
+                        </div>
+                        <div class="col-md-6">
+                            <label>Nhập lại mật khẩu</label>
+                            <input class="form-control" name="password_confirm" data-key="ConfirmPassword" placeholder="Nhập lại mật khẩu" type="password" />
+                        </div>
+                    </div>
+                    <div class="col-md-12 d-flex form-group">
+                        <div class="col-md-6">
+                            <label>Số điện thoại</label>
+                            <div class="input-group">
+                                <span style="background: #80808059;
+                                            padding: 5px 10px;
+                                            border-top-left-radius: 3px;
+                                            border-bottom-left-radius: 3px;float: left">+84</span>
+                                <input class="form-control" style="border-bottom-left-radius: 0px; border-top-left-radius: 0px; " 
+                                       name="phone" data-key="PhoneNumber" type="text" placeholder="Số điện thoại" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Tên</label>
+                            <input class="form-control" name="fullname" data-key="FullName" placeholder="Tên">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-6">
+                            <label>Vai trò</label>
+                            <select class="form-control" data-key="Role" name="role">
+                                @foreach (var role in (List<IdentityRole>)ViewData["Roles"])
+                                {
+                                    <option value="@role.Id">@role.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" name="exit" data-dismiss="modal">
+                        <i class="fa fa-fw fa-lg fa-times-circle"></i>Thoát
+                    </button>
+                    &nbsp;&nbsp;
+                    <button type="submit" class="btn btn-primary" id="btn-add" name="add"><i class="fa fa-plus"></i>Tạo tài khoản</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

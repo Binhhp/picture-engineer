@@ -1,0 +1,248 @@
+﻿@{
+    ViewData["Title"] = "Picture Engineer - Tệp tin";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-file"></i> Tệp tin</h1>
+        <p>Thực hiện quản lý tệp tin</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-file fa-lg"></i>&nbsp;Tệp tin</li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table id="myTable" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th width="5%">Id</th>
+                            <th width="30%">Dạng file</th>
+                            <th width="30%">Ngày tạo</th>
+                            <th width="30%">Xử lý</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="lock" tabindex="-1" role="dialog" aria-labelledby="lock" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-search-plus"></i>&nbsp;Xem file</h4>
+            </div>
+            <div class="modal-body text-center" id="view-file">
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" data-dismiss="modal">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        $(".index").removeClass("active");
+        $(".file").addClass("active");
+
+        JTables();
+
+        async function JTables() {
+
+            await $("#myTable").DataTable({
+                paging: true,
+                searching: true,
+                pageLength: 10,
+                processing: true,
+                serverSide: false,
+                "bSort": false,
+                "responsive": true,
+                ajax: {
+                    url: "/admin/GetFiles",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "Id"
+                    },
+                    {
+                        data: "FileName", name: "file", 'className': 'text-center', orderable: false,
+                        render: function (data) {
+
+                            var fileExtension = data.split(".").pop();
+                            return fileExtension.toUpperCase();
+                        }
+                    },
+                    {
+                        data: "DateCreate", name: "date-created", 'className': 'text-center', orderable: false,
+                        render: function (data) {
+                            const date = new Date(data);
+
+                            return "Time: <strong>" + date.getUTCHours() + "h " + date.getMinutes() + "p</strong><br />Date: <strong>" + date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + "</strong>";
+                        }
+                    },
+                    {
+                        data: null,
+                        className: "can-giua",
+                        render: function (data, type, row) {
+
+
+                            var button =
+                                '<td><a href="javascript:void(0);" class="btn btn-info btn-sm" onclick="ViewFile(this);" data-id="' + row.Id + '" data-toggle="modal" data-target="#lock" title="Xem file"><i class="fa fa-search-plus"></i></i>Xem file</a>&nbsp;';
+                            button +=
+                                '<a href="javascript:void(0);" onclick="DownloadFile(this);" class="btn btn-outline-info btn-sm" data-id="' + row.Id + '" title="Download"><i class="fa fa-cloud-download"></i>Download file</a></td>&nbsp;';
+
+                            button +=
+                                '<a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="DeleteFile(this)" data-id="' + row.Id + '" title="Xóa"><i class="fa fa-trash"></i>Xóa file</a></td>';
+                            return button;
+                        },
+                    }
+                ],
+                "columnDefs": [{
+                    "searchable": false,
+                    "visible": false,
+                    "checkboxes": {
+                        'selectRow': true
+                    },
+                    targets: [0]
+                }],
+                "select": {
+                    'style': 'multi'
+                },
+            });
+        };
+
+        //Reload tables
+        async function reloadTables() {
+            await $("#myTable").DataTable().ajax.reload();
+        };
+
+        //View file
+        async function ViewFile(event) {
+            var fileId = $(event).attr("data-id");
+            const response = await fetch("/admin/ViewFile/" + fileId).catch(error => alert(error.statusText));
+            const status = await response.json();
+
+            if (status.success) {
+                var html = `<object width="350" height="400" data="` + status.data + `" id="fileObj"></object>`;
+                $("#view-file").html(html);
+
+            }
+            else {
+                toastr["error"](status.message);
+            }
+        }
+        //download file
+        async function DownloadFile(event) {
+            var load = `<i class="fa fa-circle-o-notch fa-spin"></i>Loading`;
+
+            $(event).html(load);
+
+            var fileId = $(event).attr("data-id");
+            const response = await fetch("/admin/DownloadFile/" + fileId).catch(error => alert(error.statusText));
+            const status = await response.json();
+
+            if (status.success) {
+                const data = status.data;
+
+                var extension = data.FileName.split(".").pop();
+                var dataFile = data.FileData;
+
+                saveByteArray(data.FileName, dataFile, extension);
+            }
+            else {
+                toastr["error"](status.message);
+            }
+            var current = `<i class="fa fa-cloud-download"></i>Download file`;
+            $(event).html(current);
+        }
+        //delete file
+        async function DeleteFile(event) {
+
+            swal({
+                title: "Bạn có muốn xóa file này không?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Có, xóa nó!",
+                cancelButtonText: "Không, không cần đâu!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, (isConfirm) => {
+                if (isConfirm) {
+                    hanlderDelete();
+                }
+            });
+
+            const hanlderDelete = async () => {
+                var fileId = $(event).attr("data-id");
+                const response = await fetch("/admin/DeleteFile/" + fileId).catch(error => alert(error.statusText));
+                const status = await response.json();
+                if (status.success) {
+                    toastr["success"](status.message);
+                    swal.close();
+                    reloadTables();
+                }
+                else {
+                    console.log(status.message);
+                    toastr["error"](status.message);
+                    swal.close();
+                }
+            };
+        }
+        //download file
+        function base64ToArrayBuffer(base64) {
+            var binaryString = window.atob(base64);
+            var binaryLen = binaryString.length;
+            var bytes = new Uint8Array(binaryLen);
+            for (var i = 0; i < binaryLen; i++) {
+                var ascii = binaryString.charCodeAt(i);
+                bytes[i] = ascii;
+            }
+            return bytes;
+        }
+        //download file
+        function saveByteArray(reportName, data, extension) {
+            data = base64ToArrayBuffer(data);
+
+            var blob = blobMimeArrayBuffer(data, extension);
+            var link = document.createElement('a');
+            var objectURL = window.URL.createObjectURL(blob);
+            link.href = objectURL;
+            var fileName = reportName;
+            link.download = fileName;
+            link.click();
+
+            URL.revokeObjectURL(objectURL)
+        };
+
+        function blobMimeArrayBuffer(data, extension) {
+            const mimeType = MimeTypesMap[extension];
+
+            var blob = new Blob([data], { type: mimeType });
+            return blob
+        };
+
+        const MimeTypesMap = {
+            txt: 'text/plain',
+            png: 'image/png',
+            gif: 'image/gif',
+            jpg: 'image/jpg',
+            jpeg: 'image/jpeg',
+            pdf: 'application/pdf',
+            mp4: 'video/mp4',
+            doc: 'application/msword',
+            docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            ppt: 'application/vnd.ms-powerpoint',
+            xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        };
+
+    </script>
+}

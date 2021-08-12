@@ -1,0 +1,40 @@
+.picture-engineer__term{
+    width: 100%;
+    max-width: 100%;
+    padding-top: 50px;
+}
+.header__term{
+    width: 100%;
+    margin-bottom: 50px;
+    font-size: 42px;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.content__term{
+    width: 100%;
+    font-size: 18px;
+    color: rgb(99, 97, 97);
+    margin-bottom: 50px;
+}
+.content__term ul{
+    padding-left: 20px;
+}
+.content__term ul li{
+    list-style: none;
+    display: flex;
+}
+.content__term ul li p{
+    margin-top: 5px;
+    font-size: 17px;
+    height: min-content;
+}
+.content__term span{
+    color: rgb(39, 165, 60);
+    font-weight: bold;
+    font-size: 22px;
+    margin-right: 7px;
+}
+.title__term{
+    font-weight: bold;
+    text-transform: uppercase;
+}

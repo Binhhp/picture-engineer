@@ -1,0 +1,216 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model PictureEngineer.Data.Entities.AspNetUser
+@inject PictureEngineer.Core.IAppContext _appContext
+@{
+    ViewData["Title"] = "Picture Engineer - Thông tin cá nhân";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="row user">
+    <div class="col-md-12">
+        <div class="profile">
+            <div class="info">
+                <img class="user-img" src="@Model.Picture" />
+                <h4>@Model.FullName</h4>
+                <p>@_appContext.RoleName</p>
+            </div>
+            <div class="cover-image"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="tile p-0">
+            <ul class="nav flex-column nav-tabs user-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active"
+                       href="#user-timeline" data-toggle="tab">Thông tin cá nhân</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="#user-settings" data-toggle="tab">Cài đặt</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="#user-password" data-toggle="tab">Thay đổi mật khẩu</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="tab-content">
+            <div class="tab-pane active" id="user-timeline">
+                <div class="timeline-post">
+                    <div class="post-media">
+                        <div class="content">
+                            <h5><a href="#">@Model.FullName</a></h5>
+                            <p class="text-muted"><small>@Model.UserName</small></p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p><strong>Email:</strong>&nbsp;&nbsp;@Model.Email</p>
+                        <p><strong>Số điện thoại:</strong>&nbsp;&nbsp;@Model.PhoneNumber</p>
+                    </div>
+                    <ul class="post-utility">
+                        <li class="likes"><a href="#"><i class="fa fa-facebook"></i>&nbsp;&nbsp;Facebook</a></li>
+                        <li class="shares"><a href="#"><i class="fa fa-twitter"></i>&nbsp;&nbsp;Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="user-settings">
+                <div class="tile user-settings">
+                    <h4 class="line-head">Cài đặt</h4>
+                    <form id="form-profile" onsubmit="return false">
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label>Tên của bạn</label>
+                                <input data-key="FullName" name="fullname" class="form-control" type="text" value="@Model.FullName" placeholder="Tên của bạn" />
+                            </div>
+                            <div class="col-md-4">
+                                <label>Email</label>
+                                <input data-key="Email" name="email" class="form-control" type="text" value="@Model.Email" placeholder="Email" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 mb-4">
+                                <label>Số điện thoại</label>
+                                <div class="input-group">
+                                    <span style="background: #80808059;
+                                            padding: 5px 10px;
+                                            border-top-left-radius: 3px;
+                                            border-bottom-left-radius: 3px;float: left">+84</span>
+                                    <input class="form-control" style="border-bottom-left-radius: 0px; border-top-left-radius: 0px; "
+                                           name="phone" data-key="PhoneNumber" placeholder="Số điện thoại" value="@Model.PhoneNumber" />
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" value="@Model.Id" id="userId" style="display: none" />
+                        <div class="row mb-10">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" type="submit" id="btn-update"><i class="fa fa-fw fa-lg fa-check-circle"></i> Cập nhật</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="user-password">
+                <div class="tile user-settings">
+                    <h4 class="line-head">Thay đổi mật khẩu</h4>
+                    <form id="form-password-profile" onsubmit="return false">
+                        <div class="col-md-4">
+                            <label>Mật khẩu cũ</label>
+                            <input data-key="PasswordOld" name="password" class="form-control" type="password" placeholder="Mật khẩu cũ" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Mật khẩu mới</label>
+                            <input data-key="PasswordNew" name="password_new" id="password_new" class="form-control" type="password" placeholder="Mật khẩu mới" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Nhập lại mật khẩu mới</label>
+                            <input data-key="ConfirmPasswordNew" name="confirm_password_new" class="form-control" type="password" placeholder="Nhập lại mật khẩu mới" />
+                        </div>
+                        <input type="text" value="@Model.Id" class="userId" style="display: none" />
+                        <div class="col-md-12 my-3">
+                            <button class="btn btn-primary" type="submit" id="btn-change"><i class="fa fa-fw fa-lg fa-check-circle"></i> Thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        //create account
+        var formPaswordProfile = $("#form-password-profile").validate({
+            rules: {
+                ...rules
+            },
+            messages: { ...messages },
+            ...options,
+            submitHandler: function (form) {
+                var data = $("#form-password-profile").find(".form-control");
+                var formPassword = new FormData();
+
+                data.map(item => {
+                    var valueItem = $(data[item]).val();
+                    const key = $(data[item]).attr("data-key");
+
+                    formPassword.append(key, valueItem);
+                })
+
+                const userId = $("#form-password-profile .userId").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/profile/password?userId=" + userId,
+                    data: formPassword,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $("#btn-change").html("Loading...");
+                        $("#btn-change").addClass("disabled");
+                    },
+                    success: function (msg) {
+                        toastr["success"](msg);
+
+                        setTimeout(function () {
+                            window.location.href = "/admin/login"
+                        }, 2500);
+
+                        $("#btn-change").html('<i class="fa fa-fw fa-lg fa-check-circle"></i> Thay đổi');
+                        $("#btn-change").removeClass("disabled");
+                    },
+                    error: function (errors) {
+                        toastr["error"](errors.responseText);
+                        $("#btn-change").html('<i class="fa fa-fw fa-lg fa-check-circle"></i> Thay đổi');
+                        $("#btn-change").removeClass("disabled");
+                    }
+                })
+            }
+        });
+
+        //create account
+        var formProfile = $("#form-profile").validate({
+            rules: {
+                ...rules
+            },
+            messages: { ...messages },
+            ...options,
+            submitHandler: function (form) {
+                var data = $("#form-profile").find(".form-control");
+                var formData = new FormData();
+
+                data.map(item => {
+                    var valueItem = $(data[item]).val();
+                    const key = $(data[item]).attr("data-key");
+
+                    formData.append(key, valueItem);
+                })
+                const userId = $("#userId").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/profile?userId=" + userId,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $("#btn-update").html("Loading...");
+                        $("#btn-update").addClass("disabled");
+                    },
+                    success: function (data) {
+                        toastr["success"]("Cập nhật thông tin cá nhân thành công.");
+                        $("#btn-update").html('<i class="fa fa-fw fa-lg fa-check-circle"></i> Cập nhật');
+                        $("#btn-update").removeClass("disabled");
+                        $(".app-sidebar__user-name").html(data.FullName);
+                        $(".info h4").html(data.FullName);
+                    },
+                    error: function (errors) {
+                        toastr["error"](errors.responseText);
+                        $("#btn-update").html('<i class="fa fa-fw fa-lg fa-check-circle"></i> Cập nhật');
+                        $("#btn-update").removeClass("disabled");
+                    }
+                })
+            }
+        });
+    </script>
+
+}

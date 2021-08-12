@@ -1,0 +1,25 @@
+﻿@inject PictureEngineer.Core.IAppContext _appContext
+@{
+    var username = _appContext.UserName;
+    var avt = _appContext.UserAvt;
+    var role = _appContext.RoleName;
+}
+<aside class="app-sidebar">
+    <div class="app-sidebar__user">
+        <img class="app-sidebar__user-avatar" src="@avt" width="40" alt="User Image">
+        <div>
+            <p class="app-sidebar__user-name">@username</p>
+            <p class="app-sidebar__user-designation">
+                @role
+            </p>
+        </div>
+    </div>
+
+    <ul class="app-menu">
+        <li><a class="app-menu__item active index" href="@Url.Action("Index", "HomeAdmin", null, Context.Request.Scheme)"><i class="app-menu__icon fa fa-home"></i><span class="app-menu__label">Trang chủ</span></a></li>
+        <li><a class="app-menu__item user" href="@Url.Action("Index", "Account")"><i class="app-menu__icon fa fa-user"></i><span class="app-menu__label">Thành viên</span></a></li>
+        <li><a class="app-menu__item file" href="@Url.Action("Index","Files", null, Context.Request.Scheme)"><i class="app-menu__icon fa fa-file"></i><span class="app-menu__label">Tệp tin</span></a></li>
+        <li><a class="app-menu__item blog" href="@Url.Action("Index","Blog", null, Context.Request.Scheme)"><i class="app-menu__icon fa fa-bookmark"></i><span class="app-menu__label">Bài viết</span></a></li>
+        @* <li><a class="app-menu__item log" href="#"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Nhật ký hệ thống</span></a></li> *@
+    </ul>
+</aside>

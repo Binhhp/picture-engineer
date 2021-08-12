@@ -1,0 +1,23 @@
+.convert-pdf{
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+    padding: 50px 0;
+}
+.convert-pdf .checkbox-pdf{
+    cursor: pointer;
+    width: max-content;
+    margin: 0 20px;
+}
+.convert-pdf input[type="checkbox"]{
+    margin: 5px 10px 0 10px;
+    filter: grayscale(1);
+}
+.convert-pdf label{
+    cursor: pointer;
+    margin: 0;
+    font-size: 17px;
+    font-family: Montserrat,Arial;
+    font-weight: 500;
+}
