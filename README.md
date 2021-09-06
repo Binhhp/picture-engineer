@@ -2,15 +2,19 @@
 <br />
 Picture Engineer is a website about image recognition of text documents and pdf processing
 <br />
+<br />
 <strong>Information</strong>
 <br />
 Address: http://pictureengineer.azurewebsites.net
+<br />
 <br />
 <strong>Teachnology</strong>
 <br />
 ReactJS, Firebase, Ms Sql, Mailjet, OpenCV, Tesseract Ocr, .Net core 2.1
 <br />
-<strong>Install</strong><br />
+<br />
+<strong>Install</strong>
+<br />
 dotnet install<br />
 dotnet build<br />
 add appsettings.json
