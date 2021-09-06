@@ -13,7 +13,7 @@
 .env.test.local
 .env.production.local
 
-packages
+# packages
 .vs
 .vscode
 
@@ -32,6 +32,7 @@ packages
 /PictureEngineer.Core/DataTrainObjectDetector/yolov3.weights
 
 # Files built by Visual Studio
+*.css
 *.obj
 .vs/
 *.nupkg
