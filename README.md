@@ -8,8 +8,8 @@ Address: http://pictureengineer.azurewebsites.net
 <br />
 <strong>Teachnology</strong>
 <br />
-- ReactJS, Firebase, Ms Sql, Mailjet, OpenCV, Tesseract Ocr, .Net core 2.1
-- <br />
+ReactJS, Firebase, Ms Sql, Mailjet, OpenCV, Tesseract Ocr, .Net core 2.1
+<br />
 <strong>Install</strong><br />
 dotnet install<br />
 dotnet build<br />
